@@ -1,0 +1,44 @@
+using System;
+
+namespace exp1q7
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Enter the number of courses: ");
+            int courseCount = int.Parse(Console.ReadLine());
+
+            string[] courseCodes = new string[courseCount];
+
+            // Input course codes
+            for (int i = 0; i < courseCount; i++)
+            {
+                Console.Write($"Enter course code {i + 1}: ");
+                courseCodes[i] = Console.ReadLine();
+            }
+
+            // Display the array
+            Console.WriteLine("\nCourse Codes:");
+            foreach (string code in courseCodes)
+            {
+                Console.WriteLine(code);
+            }
+
+            // Search for a course
+            Console.Write("\nEnter a course code to search: ");
+            string searchCode = Console.ReadLine();
+
+            bool found = Array.Exists(courseCodes, code => code.Equals(searchCode, StringComparison.OrdinalIgnoreCase));
+
+            if (found)
+            {
+                Console.WriteLine($"The course code {searchCode} is found.");
+            }
+            else
+            {
+                Console.WriteLine($"The course code {searchCode} is not found.");
+            }
+        }
+    }
+}
