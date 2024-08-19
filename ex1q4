@@ -1,0 +1,58 @@
+using System;
+
+namespace exp1q4
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Enter numbers separated by spaces:");
+            string input = Console.ReadLine();
+            string[] numbers = input.Split(' ');
+
+            int[] intNumbers = Array.ConvertAll(numbers, int.Parse);
+
+            int min = FindMinimum(intNumbers);
+            int max = FindMaximum(intNumbers);
+
+            Console.WriteLine($"Minimum value: {min}");
+            Console.WriteLine($"Maximum value: {max}");
+        }
+
+        static int FindMinimum(params int[] numbers)
+        {
+            if (numbers.Length == 0)
+            {
+                throw new ArgumentException("At least one number is required.");
+            }
+
+            int min = numbers[0];
+            for (int i = 1; i < numbers.Length; i++)
+            {
+                if (numbers[i] < min)
+                {
+                    min = numbers[i];
+                }
+            }
+            return min;
+        }
+
+        static int FindMaximum(params int[] numbers)
+        {
+            if (numbers.Length == 0)
+            {
+                throw new ArgumentException("At least one number is required.");
+            }
+
+            int max = numbers[0];
+            for (int i = 1; i < numbers.Length; i++)
+            {
+                if (numbers[i] > max)
+                {
+                    max = numbers[i];
+                }
+            }
+            return max;
+        }
+    }
+}
