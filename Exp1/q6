@@ -1,0 +1,22 @@
+using System;
+
+namespace exp1q6
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Enter a number: ");
+            int number = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"Original number: {number}");
+            SquareNumber(ref number);
+            Console.WriteLine($"Squared number: {number}");
+        }
+
+        static void SquareNumber(ref int num)
+        {
+            num *= num;
+        }
+    }
+}
