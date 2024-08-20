@@ -1,0 +1,27 @@
+using System;
+
+namespace exp1q2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Enter the lower bound: ");
+            int lower = int.Parse(Console.ReadLine());
+
+            Console.Write("Enter the upper bound: ");
+            int upper = int.Parse(Console.ReadLine());
+
+            Console.WriteLine($"Perfect squares between {lower} and {upper}:");
+            GeneratePerfectSquares(lower, upper);
+        }
+
+        static void GeneratePerfectSquares(int lower, int upper)
+        {
+            for (int i = (int)Math.Ceiling(Math.Sqrt(lower)); i * i <= upper; i++)
+            {
+                Console.WriteLine(i * i);
+            }
+        }
+    }
+}
