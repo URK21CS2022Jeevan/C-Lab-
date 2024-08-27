@@ -1,0 +1,90 @@
+using System;
+
+namespace Exp_4
+{
+    public class ComplexNumber
+    {
+        public int real;
+        public int imaginary;
+        public ComplexNumber(int r, int i)
+        {
+            real = r;
+            imaginary = i;
+        }
+        public static ComplexNumber Add(ComplexNumber c1, ComplexNumber c2)
+        {
+            return new ComplexNumber(c1.real + c2.real, c1.imaginary + c2.imaginary);
+        }
+
+        public static ComplexNumber Subtract(ComplexNumber c1, ComplexNumber c2)
+        {
+            return new ComplexNumber(c1.real - c2.real, c1.imaginary - c2.imaginary);
+        }
+
+        public override string ToString()
+        {
+            return real + " + i" + imaginary;
+        }
+
+        public void Display()
+        {
+            Console.WriteLine(this.ToString());
+        }
+    }
+
+    public class Test
+    {
+        public delegate ComplexNumber ComplexOperation(ComplexNumber c1, ComplexNumber c2);
+        public delegate void DisplayDelegate();
+
+        public static DisplayDelegate OnDisplay;
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Enter the real and imaginary parts of the first complex number:");
+            
+            int real1 = int.Parse(Console.ReadLine());
+            int imaginary1 = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter the real and imaginary parts of the second complex number:");
+            int real2 = int.Parse(Console.ReadLine());
+            int imaginary2 = int.Parse(Console.ReadLine());
+
+            ComplexNumber c1 = new ComplexNumber(real1, imaginary1);
+            ComplexNumber c2 = new ComplexNumber(real2, imaginary2);
+
+            ComplexOperation addOperation = ComplexNumber.Add;
+            ComplexNumber addResult = addOperation(c1, c2);
+            Console.WriteLine("Addition Result:");
+            addResult.Display();
+
+            ComplexOperation subtractOperation = ComplexNumber.Subtract;
+            ComplexNumber subtractResult = subtractOperation(c1, c2);
+            Console.WriteLine("Subtraction Result:");
+            subtractResult.Display();
+
+            ComplexOperation[] operations = { addOperation, subtractOperation };
+            Console.WriteLine("Array of Delegates Result:");
+            foreach (var operation in operations)
+            {
+                ComplexNumber result = operation(c1, c2);
+                result.Display();
+            }
+
+            DisplayDelegate displayDelegate = new DisplayDelegate(addResult.Display);
+            displayDelegate += subtractResult.Display;
+            Console.WriteLine("Multicast Delegates Result:");
+            displayDelegate();
+
+            OnDisplay += addResult.Display;
+            OnDisplay += subtractResult.Display;
+            Console.WriteLine("Event Handling Result:");
+            OnDisplay();
+
+            Console.WriteLine("Lambda Expression Result:");
+            ComplexNumber c3 = new ComplexNumber(10, 8);
+            ComplexNumber lambdaResult = new ComplexNumber(c3.real - 5, c3.imaginary - 5);
+            lambdaResult.Display();
+ }
+}
+}
