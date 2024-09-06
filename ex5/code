@@ -1,0 +1,162 @@
+ 
+using System; 
+ 
+namespace Exp_5._1 
+{ 
+    public class NonIntegerValueException : Exception 
+    { 
+        public NonIntegerValueException(string message) : base(message) { } 
+    } 
+ 
+    public class StackOverflowException : Exception 
+    { 
+        public StackOverflowException(string message) : base(message) { } 
+    } 
+ 
+    public class StackUnderflowException : Exception 
+    { 
+        public StackUnderflowException(string message) : base(message) { } 
+    } 
+ 
+    public class IntegerStack 
+    { 
+        private int[] stack; 
+        private int top; 
+        private int maxSize; 
+ 
+        public IntegerStack(int size) 
+        { 
+            maxSize = size; 
+            stack = new int[maxSize]; 
+            top = -1; 
+        }  public void Push(object value) 
+        { 
+            try 
+            { 
+                if (top >= maxSize - 1) 
+                { 
+                    throw new StackOverflowException("Maximum stack limit reached."); 
+                } 
+ 
+                if (!(value is int)) 
+                { 
+                    throw new NonIntegerValueException("Non-integer value is not allowed."); 
+                } 
+ 
+                stack[++top] = (int)value; 
+            } 
+            catch (StackOverflowException ex) 
+            { 
+                Console.WriteLine(ex.Message); 
+            } 
+            catch (NonIntegerValueException ex) 
+            { 
+                Console.WriteLine(ex.Message); 
+            } 
+        } 
+ 
+        public int Pop() 
+        { 
+            try 
+            { 
+                if (top < 0) 
+                { 
+                    throw new StackUnderflowException("Stack is empty."); 
+                } 
+                return stack[top--]; 
+            } 
+            catch (StackUnderflowException ex) 
+            { 
+                Console.WriteLine(ex.Message); 
+            } 
+            return 0; 
+        } 
+ 
+        public int Peek() 
+        { 
+            if (top < 0) 
+            { 
+                throw new StackUnderflowException("Stack is empty."); 
+  } 
+ 
+            return stack[top]; 
+        } 
+ 
+        public void Display() 
+        { 
+            if (top < 0) 
+            { 
+                Console.WriteLine("Stack is empty."); 
+                return; 
+            } 
+ 
+            Console.WriteLine("Stack contents:"); 
+            for (int i = top; i >= 0; i--) 
+            { 
+                Console.WriteLine(stack[i]); 
+            } 
+        } 
+    } 
+ 
+    class Program 
+    { 
+        static void Main(string[] args) 
+        { 
+            bool exit = true; 
+            while (exit) 
+            { 
+                try 
+                { 
+                    Console.Write("Enter the maximum size of the stack: "); 
+                    int size = int.Parse(Console.ReadLine()); 
+ 
+                    IntegerStack stack = new IntegerStack(size); 
+                    while (exit) 
+                    { 
+                        Console.WriteLine("\nChoose an operation:"); 
+                        Console.WriteLine("1. Push"); 
+                        Console.WriteLine("2. Pop"); 
+                        Console.WriteLine("3. Peek"); 
+                        Console.WriteLine("4. Display Stack"); 
+                        Console.WriteLine("5. Exit"); 
+ 
+                        int choice = int.Parse(Console.ReadLine()); 
+ 
+                        switch (choice) 
+                        { 
+                            case 1: 
+                                Console.Write("Enter an integer to push onto the stack: "); object value = int.Parse(Console.ReadLine()); 
+                                stack.Push(value); 
+                                break; 
+                            case 2: 
+                                Console.WriteLine("Popped: " + stack.Pop()); 
+                                break; 
+                            case 3: 
+                                Console.WriteLine("Top element: " + stack.Peek()); 
+                                break; 
+                            case 4: 
+                                stack.Display(); 
+                                break; 
+                            case 5: 
+                                exit = false; 
+                                break; 
+                            default: 
+                                Console.WriteLine("Invalid choice. Please try again."); 
+                                break; 
+                        } 
+                    } 
+                } 
+                catch (FormatException) 
+                { 
+                    Console.WriteLine("Invalid input: Please enter a valid integer."); 
+                } 
+                catch (Exception ex) 
+                { 
+                    Console.WriteLine("An unexpected error occurred: " + ex.Message); 
+                } 
+            } 
+        } 
+    } 
+} 
+ 
+ 
