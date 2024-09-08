@@ -1,4 +1,98 @@
+ex5.2:
  
+using System; 
+ 
+namespace Exp_5._2 
+{ 
+    class Program 
+    { 
+        static void Main(string[] args) 
+        { bool exit = true; 
+            while (exit) 
+            { 
+                try 
+                { 
+                    Console.Write("Enter the first integer: "); 
+                    int z = Convert.ToInt32(Console.ReadLine()); 
+ 
+                    Console.Write("Enter the second integer: "); 
+                    int y = Convert.ToInt32(Console.ReadLine()); 
+ 
+                    if (y == 0) 
+                    { 
+                        throw new DivideByZeroException("Division by zero is not allowed."); 
+                    } 
+ 
+                    float result = (float)z / (float)y; 
+                    Console.WriteLine("Result: " + result); 
+                    exit = false; 
+                } 
+                catch (FormatException) 
+                { 
+                    Console.WriteLine("Invalid input: Please enter valid 32-bit signed integers."); 
+                } 
+                catch (DivideByZeroException ex) 
+                { 
+                    Console.WriteLine(ex.Message); 
+                } 
+                catch (Exception ex) 
+                { 
+                    Console.WriteLine("An unexpected error occurred: " + ex.Message); 
+                } 
+            } 
+        } 
+    } 
+} 
+ex5.3:
+using System; 
+ 
+namespace Exp_5._3 
+{ 
+    class Program 
+    { 
+        public class BadStringException : Exception 
+        { 
+            public BadStringException(string message) : base(message) { } 
+        } 
+ 
+        public class MaximumLengthException : Exception 
+        { 
+            public MaximumLengthException(string message) : base(message) { } 
+        } 
+ 
+        static void Main(string[] args) 
+        { 
+            while (true) 
+            { 
+                try 
+                { 
+                    Console.Write("Enter a string: "); 
+                    string input = Console.ReadLine(); 
+                    if (input.Length > 10) 
+                    { 
+                        throw new MaximumLengthException("Maximum Length"); 
+                    } 
+                    int number; 
+                    if (!int.TryParse(input, out number)) 
+                    { 
+                        throw new BadStringException("Bad String"); 
+                    } 
+                    Console.WriteLine("Converted integer: " + number); 
+                    break; 
+                } 
+                catch (MaximumLengthException ex) 
+                { 
+                    Console.WriteLine("Exception: " + ex.Message);  } 
+                catch (BadStringException ex) 
+                { 
+                    Console.WriteLine("Exception: " + ex.Message); 
+                } 
+            } 
+        } 
+    } 
+} 
+
+ex5.1:
 using System; 
  
 namespace Exp_5._1 
@@ -29,7 +123,8 @@ namespace Exp_5._1
             maxSize = size; 
             stack = new int[maxSize]; 
             top = -1; 
-        }  public void Push(object value) 
+        }
+ public void Push(object value) 
         { 
             try 
             { 
@@ -76,8 +171,7 @@ namespace Exp_5._1
         { 
             if (top < 0) 
             { 
-                throw new StackUnderflowException("Stack is empty."); 
-  } 
+      } 
  
             return stack[top]; 
         } 
@@ -125,7 +219,9 @@ namespace Exp_5._1
                         switch (choice) 
                         { 
                             case 1: 
-                                Console.Write("Enter an integer to push onto the stack: "); object value = int.Parse(Console.ReadLine()); 
+                                Console.Write("Enter an integer to push onto the stack: ");
+                throw new StackUnderflowException("Stack is empty.");
+  object value = int.Parse(Console.ReadLine()); 
                                 stack.Push(value); 
                                 break; 
                             case 2: 
