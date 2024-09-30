@@ -1,0 +1,223 @@
+Ex6.A
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace Exp_6._1
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            Console.WriteLine("Enter register numbers separated by spaces:");
+            string input = Console.ReadLine();
+            string pattern = @"(UR\d{2}CS\d{4}|PR\d{2}CS\d{4})";
+            var allNumbers = ExtractMatches(input, pattern);
+
+            while (true)
+            {
+                Console.WriteLine("\nMenu:");
+                Console.WriteLine("1. Display all Register Numbers");
+                Console.WriteLine("2. Display all numbers with prefix PR");
+                Console.WriteLine("3. Display all numbers ending with 0");
+                Console.WriteLine("4. Replace all odd numbers with 0");
+                Console.WriteLine("5. Display duplicate numbers");
+                Console.WriteLine("6. Concatenate the first two numbers");
+
+                Console.WriteLine("7. Find the last occurrence of a repeating digit in a number");
+                Console.WriteLine("8. Add 'K' at the beginning of each number");
+                Console.WriteLine("9. Find the first occurrence of a digit in the register numbers");
+                Console.WriteLine("10. List all register numbers with substring 'R16'");
+                Console.WriteLine("11. Exit");
+                Console.Write("Choose an option: ");
+                int choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        Console.WriteLine("\nAll Register Numbers:");
+                        foreach (var num in allNumbers)
+                            Console.WriteLine(num);
+                        break;
+
+                    case 2:
+                        var prNumbers = allNumbers.Where(num => num.StartsWith("PR"));
+                        Console.WriteLine("\nNumbers with prefix PR:");
+                        foreach (var num in prNumbers)
+                            Console.WriteLine(num);
+                        break;
+
+                    case 3:
+                        var numbersEndingWithZero = allNumbers.Where(num => num.EndsWith("0"));
+                        Console.WriteLine("\nNumbers ending with 0:");
+                        foreach (var num in numbersEndingWithZero)
+                            Console.WriteLine(num);
+                        break;
+
+                    case 4:
+                        var replacedOddNumbers = ReplaceOddNumbers(input);
+                        Console.WriteLine("\nReplace odd numbers with 0:");
+                        Console.WriteLine(replacedOddNumbers);
+                        break;
+
+                    case 5:
+                        var duplicates = allNumbers.GroupBy(num => num)
+                                                   .Where(group => group.Count() > 1)
+                                                   .Select(group => group.Key);
+                        Console.WriteLine("\nDuplicate Numbers:");
+                        foreach (var num in duplicates)
+                            Console.WriteLine(num);
+                        break;
+
+                    case 6:
+                        if (allNumbers.Count() >= 2)
+                        {
+
+                            string concatenated = allNumbers.ElementAt(0) + allNumbers.ElementAt(1);
+                            Console.WriteLine("\nConcatenated Result:");
+                            Console.WriteLine(concatenated);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\nNot enough numbers to concatenate.");
+                        }
+                        break;
+
+                    case 7:
+                        Console.Write("Enter a number to find the last repeating digit: ");
+                        string givenNumber = Console.ReadLine();
+                        char lastRepeatingDigit = FindLastRepeatingDigit(givenNumber);
+                        Console.WriteLine("\nLast Occurrence of Repeating Digit:");
+                        Console.WriteLine(lastRepeatingDigit);
+                        break;
+
+                    case 8:
+                        Console.WriteLine("\nNumbers with 'K' at the beginning:");
+                        foreach (var num in allNumbers)
+                            Console.WriteLine("K" + num);
+                        break;
+
+                    case 9:
+                        Console.Write("Enter a digit to find its first occurrence in the register numbers: ");
+                        char digitToFind = Console.ReadKey().KeyChar;
+                        Console.WriteLine();
+                        Console.WriteLine("\nFirst Occurrence of Digit '{0}':", digitToFind);
+                        foreach (var num in allNumbers)
+                            Console.WriteLine($"{num}: {FindFirstOccurrence(num, digitToFind)}");
+                        break;
+
+                    case 10:
+                        var r16Numbers = allNumbers.Where(num => num.Contains("R16"));
+                        Console.WriteLine("\nNumbers with substring 'R16':");
+                        foreach (var num in r16Numbers)
+                            Console.WriteLine(num);
+                        break;
+
+                    case 11:
+                        return;
+
+                    default:
+                        Console.WriteLine("Invalid choice. Please try again.");
+                        break;
+                }
+            }
+
+        }
+
+        static IEnumerable<string> ExtractMatches(string input, string pattern)
+        {
+            return Regex.Matches(input, pattern)
+                        .Cast<Match>()
+                        .Select(m => m.Value);
+        }
+
+        static string ReplaceOddNumbers(string input)
+        {
+            return Regex.Replace(input, @"\d", match =>
+            {
+                int number = int.Parse(match.Value);
+                return number % 2 == 1 ? "0" : match.Value;
+            });
+        }
+
+        static char FindLastRepeatingDigit(string number)
+        {
+            var digitCounts = new Dictionary<char, int>();
+            foreach (var digit in number)
+            {
+                if (char.IsDigit(digit))
+                {
+                    if (digitCounts.ContainsKey(digit))
+                        digitCounts[digit]++;
+                    else
+                        digitCounts[digit] = 1;
+                }
+            }
+            return digitCounts.Where(d => d.Value > 1).OrderByDescending(d => d.Key).FirstOrDefault().Key;
+        }
+
+        static int FindFirstOccurrence(string number, char digit)
+        {
+            return number.IndexOf(digit);
+        }
+    }
+}
+
+Ex6.B
+using System;
+
+namespace Exp_6._2
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            Console.WriteLine("Enter a string to find the sandwich:");
+            string input = Console.ReadLine();
+
+            Console.WriteLine(GetSandwich(input));
+        }
+
+        static string GetSandwich(string input)
+        {
+
+            int firstIndex = input.IndexOf("bread");
+
+            int lastIndex = input.LastIndexOf("bread");
+
+            if (firstIndex != -1 && lastIndex != -1 && firstIndex != lastIndex)
+            {
+                return input.Substring(firstIndex + 5, lastIndex - (firstIndex + 5));
+            }
+
+            return "";
+        }
+    }
+
+}
+
+Ex6.C
+using System;
+using System.Text.RegularExpressions;
+
+namespace Exp_6._3
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            Console.WriteLine("Enter a string to process zipZap:");
+            string input = Console.ReadLine();
+
+
+            Console.WriteLine(ZipZap(input));
+        }
+
+        static string ZipZap(string input)
+        {
+            return Regex.Replace(input, @"z.p", match => match.Value[0] + match.Value[2].ToString());
+        }
+    }
+
+}
