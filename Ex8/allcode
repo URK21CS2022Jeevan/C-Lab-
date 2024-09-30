@@ -1,0 +1,181 @@
+Ex8.A
+using System;
+using System.IO;
+using System.Threading;
+
+namespace Exp_8._1
+{
+    class CountThreads
+    {
+        static string text;
+
+        static void Main(string[] args)
+
+        {
+            string textFile = "input.txt";
+            text = File.ReadAllText(textFile);
+
+            Thread alphabetThread = new Thread(CountAlphabets);
+            Thread digitThread = new Thread(CountDigits);
+            Thread vowelThread = new Thread(CountVowels);
+
+            alphabetThread.Start();
+            digitThread.Start();
+            vowelThread.Start();
+
+            alphabetThread.Join();
+            digitThread.Join();
+            vowelThread.Join();
+
+            Console.WriteLine("Counting completed.");
+        }
+
+        static void CountAlphabets()
+        {
+            int alphabetCount = 0;
+            foreach (char c in text)
+            {
+                if (char.IsLetter(c))
+                    alphabetCount++;
+            }
+            Console.WriteLine($"Number of Alphabets: {alphabetCount}");
+        }
+
+        static void CountDigits()
+        {
+            int digitCount = 0;
+            foreach (char c in text)
+            {
+                if (char.IsDigit(c))
+                    digitCount++;
+            }
+            Console.WriteLine($"Number of Digits: {digitCount}");
+        }
+
+        static void CountVowels()
+        {
+            int vowelCount = 0;
+            foreach (char c in text.ToLower())
+            {
+                if ("aeiou".Contains(c))
+                    vowelCount++;
+
+            }
+
+            Console.WriteLine($"Number of Vowels: {vowelCount}");
+        }
+    }
+
+}
+
+Ex8.B
+using System;
+using System.Threading;
+
+namespace Exp_8._2
+{
+
+    class BankAccount
+    {
+        private decimal balance;
+        private readonly object lockObj = new object();
+
+        public BankAccount(decimal initialBalance)
+        {
+            balance = initialBalance;
+        }
+
+        public void Deposit(decimal amount)
+        {
+            lock (lockObj)
+            {
+                Console.WriteLine($"Depositing {amount}...");
+                balance += amount;
+                Console.WriteLine($"New Balance after deposit: {balance}");
+            }
+
+        }
+
+        public void Withdraw(decimal amount)
+        {
+            lock (lockObj)
+            {
+                if (balance >= amount)
+                {
+                    Console.WriteLine($"Withdrawing {amount}...");
+                    balance -= amount;
+                    Console.WriteLine($"New Balance after withdrawal: {balance}");
+                }
+                else
+                {
+                    Console.WriteLine("Insufficient funds for withdrawal.");
+                }
+            }
+        }
+
+        public void DisplayBalance()
+        {
+            Console.WriteLine($"Current Balance: {balance}");
+        }
+    }
+
+    class BankingApplication
+    {
+        static void Main(string[] args)
+        {
+            BankAccount account = new BankAccount(1000);
+
+            Thread depositThread = new Thread(() => account.Deposit(500));
+            Thread withdrawThread = new Thread(() => account.Withdraw(700));
+            Thread withdrawThread2 = new Thread(() => account.Withdraw(200));
+
+            depositThread.Start();
+            withdrawThread.Start();
+            withdrawThread2.Start();
+
+            depositThread.Join();
+            withdrawThread.Join();
+            withdrawThread2.Join();
+
+            account.DisplayBalance();
+        }
+    }
+
+}
+
+Ex8.C
+using System;
+using System.Threading;
+
+namespace Exp_8._3
+{
+
+    class MultiplicationTables
+    {
+        static void Main(string[] args)
+        {
+            Thread tableFiveThread = new Thread(() => PrintTable(5, 1000));
+            Thread tableSevenThread = new Thread(() => PrintTable(7, 2000));
+            Thread tableThirteenThread = new Thread(() => PrintTable(13, 3000));
+
+            tableFiveThread.Start();
+            tableSevenThread.Start();
+            tableThirteenThread.Start();
+
+            tableFiveThread.Join();
+            tableSevenThread.Join();
+            tableThirteenThread.Join();
+        }
+
+        static void PrintTable(int number, int interval)
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine($"{number} x {i} = {number * i}");
+                Thread.Sleep(interval);
+
+            }
+        }
+    }
+
+}
