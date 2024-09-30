@@ -1,0 +1,407 @@
+Ex7.A
+using System;
+using System.Collections.Generic;
+
+namespace Exp_7._1
+{
+    class StudentInformationSystem
+    {
+        class Student
+        {
+            public int Id;
+            public string Name;
+            public int Age;
+
+            public void Display()
+            {
+                Console.WriteLine($"ID: {Id}, Name: {Name}, Age: {Age}");
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            List<Student> students = new List<Student>();
+            int choice;
+
+            do
+            {
+                Console.WriteLine("\nStudent Information System");
+                Console.WriteLine("1. Add Student");
+                Console.WriteLine("2. Delete Student");
+                Console.WriteLine("3. Update Student");
+                Console.WriteLine("4. Display Students");
+
+                Console.WriteLine("5. Sort Students by ID");
+                Console.WriteLine("6. Search Student by ID");
+                Console.WriteLine("7. Exit");
+                Console.Write("Enter your choice: ");
+                choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        AddStudent(students);
+                        break;
+                    case 2:
+                        DeleteStudent(students);
+                        break;
+                    case 3:
+                        UpdateStudent(students);
+                        break;
+                    case 4:
+                        DisplayStudents(students);
+                        break;
+                    case 5:
+                        SortStudents(students);
+                        break;
+                    case 6:
+                        SearchStudent(students);
+                        break;
+                    case 7:
+                        Console.WriteLine("Exiting...");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice!");
+                        break;
+                }
+            } while (choice != 7);
+        }
+
+        static void AddStudent(List<Student> students)
+        {
+            Student student = new Student();
+            Console.Write("Enter ID: ");
+            student.Id = int.Parse(Console.ReadLine());
+            Console.Write("Enter Name: ");
+            student.Name = Console.ReadLine();
+            Console.Write("Enter Age: ");
+            student.Age = int.Parse(Console.ReadLine());
+
+            students.Add(student);
+        }
+
+        static void DeleteStudent(List<Student> students)
+        {
+            Console.Write("Enter Student ID to delete: ");
+            int id = int.Parse(Console.ReadLine());
+            Student student = students.Find(s => s.Id == id);
+            if (student != null)
+            {
+                students.Remove(student);
+                Console.WriteLine("Student deleted.");
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
+            }
+        }
+
+        static void UpdateStudent(List<Student> students)
+        {
+            Console.Write("Enter Student ID to update: ");
+            int id = int.Parse(Console.ReadLine());
+            Student student = students.Find(s => s.Id == id);
+            if (student != null)
+            {
+                Console.Write("Enter new Name: ");
+                student.Name = Console.ReadLine();
+                Console.Write("Enter new Age: ");
+                student.Age = int.Parse(Console.ReadLine());
+                Console.WriteLine("Student updated.");
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
+            }
+        }
+
+        static void DisplayStudents(List<Student> students)
+        {
+            if (students.Count == 0)
+            {
+                Console.WriteLine("No students to display.");
+                return;
+            }
+
+            foreach (var student in students)
+            {
+                student.Display();
+            }
+        }
+
+        static void SortStudents(List<Student> students)
+        {
+            students.Sort((x, y) => x.Id.CompareTo(y.Id));
+            Console.WriteLine("Students sorted by ID.");
+        }
+
+        static void SearchStudent(List<Student> students)
+        {
+            Console.Write("Enter Student ID to search: ");
+            int id = int.Parse(Console.ReadLine());
+            Student student = students.Find(s => s.Id == id);
+            if (student != null)
+            {
+                student.Display();
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
+            }
+        }
+    }
+
+}
+
+Ex7.B
+using System;
+using System.Collections.Generic;
+
+namespace Exp_7._2
+{
+    class LibraryManagement
+    {
+        class Book
+        {
+            public string Title;
+            public string ISBN;
+
+            public override bool Equals(object obj)
+            {
+                Book other = obj as Book;
+                if (other == null)
+                    return false;
+
+                return this.ISBN == other.ISBN;
+            }
+
+            public override int GetHashCode()
+            {
+                return ISBN.GetHashCode();
+            }
+
+            public void Display()
+            {
+                Console.WriteLine($"Title: {Title}, ISBN: {ISBN}");
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            HashSet<Book> books = new HashSet<Book>();
+            int choice;
+
+            do
+            {
+                Console.WriteLine("\nLibrary Management System");
+                Console.WriteLine("1. Add Book");
+                Console.WriteLine("2. Delete Book");
+                Console.WriteLine("3. Display Books");
+
+                Console.WriteLine("4. Exit");
+                Console.Write("Enter your choice: ");
+                choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        AddBook(books);
+                        break;
+                    case 2:
+                        DeleteBook(books);
+                        break;
+                    case 3:
+                        DisplayBooks(books);
+                        break;
+                    case 4:
+                        Console.WriteLine("Exiting...");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice!");
+                        break;
+                }
+            } while (choice != 4);
+        }
+
+        static void AddBook(HashSet<Book> books)
+        {
+            Book book = new Book();
+            Console.Write("Enter Book Title: ");
+            book.Title = Console.ReadLine();
+            Console.Write("Enter Book ISBN: ");
+            book.ISBN = Console.ReadLine();
+
+            if (books.Add(book))
+            {
+                Console.WriteLine("Book added.");
+            }
+            else
+            {
+                Console.WriteLine("Book with this ISBN already exists.");
+            }
+        }
+
+        static void DeleteBook(HashSet<Book> books)
+        {
+            Console.Write("Enter ISBN to delete: ");
+            string isbn = Console.ReadLine();
+            Book book = new Book { ISBN = isbn };
+
+            if (books.Remove(book))
+            {
+                Console.WriteLine("Book deleted.");
+            }
+            else
+            {
+                Console.WriteLine("Book not found.");
+            }
+        }
+
+        static void DisplayBooks(HashSet<Book> books)
+        {
+            if (books.Count == 0)
+            {
+                Console.WriteLine("No books to display.");
+                return;
+            }
+
+            foreach (var book in books)
+            {
+                book.Display();
+            }
+        }
+    }
+
+}
+
+Ex7.C
+using System;
+using System.Collections.Generic;
+
+namespace Exp_7._3
+{
+    class IntegerQueue
+    {
+        static void Main(string[] args)
+        {
+            Queue<int> queue = new Queue<int>();
+            int choice;
+
+
+            do
+            {
+                Console.WriteLine("\nInteger Queue Operations");
+                Console.WriteLine("1. Enqueue");
+                Console.WriteLine("2. Dequeue");
+                Console.WriteLine("3. Display Queue");
+                Console.WriteLine("4. Exit");
+                Console.Write("Enter your choice: ");
+                choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        Enqueue(queue);
+                        break;
+                    case 2:
+                        Dequeue(queue);
+                        break;
+                    case 3:
+                        DisplayQueue(queue);
+                        break;
+                    case 4:
+                        Console.WriteLine("Exiting...");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice!");
+                        break;
+                }
+            } while (choice != 4);
+        }
+
+        static void Enqueue(Queue<int> queue)
+        {
+            Console.Write("Enter an integer to enqueue: ");
+            int value = int.Parse(Console.ReadLine());
+            queue.Enqueue(value);
+            Console.WriteLine($"{value} enqueued.");
+        }
+
+        static void Dequeue(Queue<int> queue)
+        {
+            if (queue.Count > 0)
+            {
+                int value = queue.Dequeue();
+                Console.WriteLine($"{value} dequeued.");
+            }
+            else
+            {
+
+                Console.WriteLine("Queue is empty.");
+            }
+        }
+
+        static void DisplayQueue(Queue<int> queue)
+        {
+            if (queue.Count == 0)
+            {
+                Console.WriteLine("Queue is empty.");
+                return;
+            }
+
+            Console.WriteLine("Queue contents:");
+            foreach (var item in queue)
+            {
+                Console.WriteLine(item);
+            }
+        }
+    }
+
+}
+
+Ex7.D
+using System;
+using System.Collections.Generic;
+
+namespace Exp_7._4
+{
+    class PalindromeCheck
+    {
+        static void Main(string[] args)
+
+        {
+            Console.Write("Enter a string to check for palindrome: ");
+            string input = Console.ReadLine().ToLower();
+            bool isPalindrome = CheckPalindrome(input);
+
+            if (isPalindrome)
+                Console.WriteLine("The string is a palindrome.");
+            else
+                Console.WriteLine("The string is not a palindrome.");
+        }
+
+        static bool CheckPalindrome(string input)
+        {
+            Queue<char> queue = new Queue<char>();
+            Stack<char> stack = new Stack<char>();
+
+            foreach (char ch in input)
+            {
+                if (char.IsLetterOrDigit(ch))
+                {
+                    queue.Enqueue(ch);
+                    stack.Push(ch);
+                }
+            }
+
+            while (queue.Count > 0)
+            {
+                if (queue.Dequeue() != stack.Pop())
+                    return false;
+            }
+
+            return true;
+        }
+    }
+
+}
